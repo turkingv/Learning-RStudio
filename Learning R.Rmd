@@ -1,0 +1,53 @@
+---
+title: "Concepts and Code Learned"
+author: "Victoria Turkington"
+date: "9/29/2020"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Week 4 R Markdown & Data Science Intro
+### R Markdown
+
+- bullets   [two spaces]
+- **bold** 
+- *italics* 
+- ~~strikethrough~~ 
+- [github.com](link.com)
+
+### Types of Data Science Questions
+
+- descriptive analysis: simple summaries of sample [US Census]
+- exploratory analysis: explore relationships & help inform hypothesis generation
+- inferential analysis: use small example to extrapolate to larger pop - requires thorough sampling scheme
+- predictive analysis: using current and historical data to predict future outcomes [high data volume and simple modeling tends to do best here] predictive does not equal causation either
+- causal analysis: manipulate independent variable with other factors controlled to determine cause [challenging to gather appropriate data]
+- mechanistic analysis: exact changes in variables -> exact changes in other variables [physical or engineering science]
+
+### Experimental Design
+
+variables, confounders, p-hacking, control vs experimental groups, value of replication, sharing data, etc
+
+### Big Data
+
+volume, velocity, variety, 
+
+structured data sets : typical excel sheet
+unstructured: ex - emails, time spent on certain sites, etc
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
