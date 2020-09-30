@@ -9,7 +9,7 @@ output: pdf_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Week 4 R Markdown & Data Science Intro
+## Week 4 Course 1 R Markdown & Data Science Intro
 ### R Markdown
 
 - bullets   [two spaces]
@@ -38,16 +38,137 @@ volume, velocity, variety,
 structured data sets : typical excel sheet
 unstructured: ex - emails, time spent on certain sites, etc
 
-```{r cars}
-summary(cars)
+# Course 2
+## Week 1 Writing Code
+### Setting up Wd
+
+```{r}
+getwd()
 ```
 
-## Including Plots
+- establish working directory - move as needed via misc/ change wd 
+- to save environments/ functions open R ~~studio~~ text editor (button next to printer) 
+- name them and save file
 
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
+ex: change wd - coursera
+```{r}
+# dir() # lists files available
+# source('test funct.R') # makes them accesible
+# ls() # to see environments/ functions
+# test.function(2) # should = 6
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+### R Console Input & Evaluation
+
+```{r}
+yn<- c(1, 1.5, 2, 3) # <- = assignment vector
+yn # autoprint 
+print(yn) # explicit print [1] means that is the first value in that vector row
+msg<- "helloWorld"
+msg
+```
+
+### R Data & Objects + Vectors & Lists
+
+All objects can be classified as:
+- numeric (real numbers)
+- character 
+- integer (type L after number)
+- complex 
+- logical (T/F) 
+
+All vectors can only contain one type of the above objects
+Exception: Lists are great for combining objects from different classes
+
+All objects have various attributes
+- names, dimnames  
+- dimensions 
+- classification 
+- length for example if a vector has 8 values its length is 8 
+- additional attributes as defined 
+
+- Inf = Infinity  
+- NaN: undefined object; can be used for missing values  
+- vector("insert_class", length = insert ) # empty vector  
+- ls() # list  
+- attributes() # displays attributes  
+- c() # concatenate values -> vector  
+
+```{r}
+yc<- c("a", "b", "c")
+yc
+attributes(yc)
+yi<- vector("integer", length = 5)
+yi
+yl<- c(T, F)
+ycomplex<- c(1+ 0i, 2+ 4i)
+ycomplex
+```
+
+If you mix different classes together implicit coercion occurs;character & numeric -> characters, etc
+
+Can explicity change class via as.insert_class(). Returns NA & Error if no logical interpretation
+
+```{r}
+as.numeric(yc)
+as.integer(yl)
+ylist<- list("a", 1, 4+2i, FALSE)
+ylist ## dbl brackets signifies list! 
+```
+
+### Matrices
+
+same class of objects required
+
+```{r}
+m<- matrix(nrow = 2, ncol = 4) ##empty matrix
+m
+m<- matrix(1:8, nrow = 2, 4) ## adds columnwise
+m
+dim(m) ## matrix dimensions
+m<- 1:10
+dim(m) <- c(2,5) ## transforms vector to matrix
+m
+m1<- c(1:5)
+m2<- c(11:15)
+m<- rbind(m1, m2) ##binds two vectors into matrix rows
+m
+m<- cbind(m1,m2) ##binds two vectors into matrix columns
+m
+```
+
+### Factors!
+
+used for categorical data to prescribe data labels/ levels; M/F, high, med, low, etc
+
+```{r}
+f<- factor(c("HS", "College", "Grad", "Grad", "HS", "HS"))
+f
+attributes(f) ## levels assigned alphabetically
+f<- factor(c("HS", "College", "Grad", "Grad", "HS", "HS"),
+           levels = c("HS", "College", "Grad")) ## manually determines levels
+f
+```
+### Missing Values
+
+NaNs are NA but NAs aren't NaNs
+
+```{r}
+n<- c(1, 2, NaN, NA, 5)
+is.na(n)
+is.nan(n)
+```
+
+### Data Frames
+
+List in which all vectors have the same length! Can have an assortment of class types.
+Special Attributes: row.names (can be subject names or just 1, 2, 3,)
+
+Can be created by calling read.table() or read.csv() OR converted to matrix via data.matrix()
+
+```{r}
+B2M<- data.frame(child = c("boys", "boys"), number = c(2, 2), adult = c("men", "men"))
+B2M
+```
+
+- 
