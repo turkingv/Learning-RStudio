@@ -8,7 +8,7 @@ output: pdf_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-
+# Course 1
 ## Week 4 Course 1 R Markdown & Data Science Intro
 ### R Markdown
 
@@ -169,6 +169,442 @@ Can be created by calling read.table() or read.csv() OR converted to matrix via 
 ```{r}
 B2M<- data.frame(child = c("boys", "boys"), number = c(2, 2), adult = c("men", "men"))
 B2M
+nrow(B2M)
+ncol(B2M)
 ```
 
-- 
+### Names
+
+useful for creating self describing data!
+
+Vector Examples
+
+```{r}
+v<- 1:3
+names(v)<- c("a", "b", "c")
+v
+```
+
+List Examples
+
+```{r}
+l<- list("a"=1, "b"=2, "c"=3)
+l
+```
+
+Matrix Examples
+
+```{r}
+m<- matrix(1:4, nrow = 2, ncol = 2)
+m
+dimnames(m)<- list(c("c", "d"), c("a", "b")) #row, column
+m
+```
+
+### Reading Tabular Data
+
+Reading | Writing
+read.csv/ read.table | write.table
+readLines | writeLines  (text as character vector)
+source | dump (R code files - functions, etc)
+dget |dput (R code files deparsed into text files)
+load | save (reading in saved workspaces)
+unserialize | serialize (reading single R objects in binary form)
+
+read.table(file, header, sep, colClasses, nrows, comment.char, skip, stringsAsFactors)
+*see help page for more info
+
+Lots of info about outside connections - view as needed.
+
+### Subsetting
+
+- Basics  
+- Lists 
+- Matrices 
+- Partial Matching 
+- Removing missing values 
+
+**Basics**
+- [] returns object of the same class as the original (vector -> vector); can select multiple elements of an object  
+- [[]] extract ONE ELEMENT from list/ data frame -> returned object may be of different class  
+- $ extract element of object by name otherwise similar to [[]]
+
+```{r}
+b<- c(1, 4, 7, 9, 9, 4, 5)
+b
+b[1]
+b[3]
+b[1:5]
+b[b>5]
+u<- b < 7
+u
+```
+
+**Lists**
+
+```{r}
+l<- list(me = "hungry", cookies = 1:8, chubbybunny = "you")
+l[2] ## gives list
+l[[2]] ## gives sequence
+l$cookies
+l[1]
+l[[1]]
+l$me
+l[c(1,3)] ## single bracket for multiple elems
+```
+
+computed indicies; [[]]
+
+```{r}
+f<- function(x) x^2
+l<- list(atticus = f(2:5), boo = "radley") 
+finch<- "atticus"
+l[[finch]] ## returns computed index
+l[finch] 
+l$finch ## null b/c looking for name w/in list == "finch"
+l<- list(go = list(5,6,7,8), team = list("who", "do", "we", "appreciate"))
+l[[c(1,3)]]
+l[[c(2,4)]]
+```
+
+**Matrices**
+
+```{r}
+m<- matrix(1:10, nrow = 5, ncol = 2)
+m[4,1] ## Returns vector
+m[4,1,drop = FALSE] ## Returns matrix (prevents 'drop' of dimensions)
+m[4,]
+m[4, ,drop = FALSE] 
+```
+
+**Partial Matching**
+```{r}
+l$te ## does not work for [[]]
+```
+
+**Removing Missing Values **
+```{r}
+n<- c("a", "b", NA, "d")
+na<- is.na(n)
+n[na] ##get whats missing
+n[!na] ##opposite of what's missing
+n1<- c(1, 2, 3, NA)
+good<- complete.cases(n, n1)
+n[good] #which elements between two are not missing any data? -> only 1&2
+n1[good]
+```
+
+**Vectorized Operations**
+
+actions occur respectively
+```{r}
+x<- c(1:5)
+y<- c(6:10)
+x*y
+x>=3
+m<- matrix(1:4, nrow =2, ncol=2)
+m1<- matrix(5,4, nrow=2, ncol=2) ## produces matrix w/ "5" values in all four quadrants
+m*m1
+m/m1
+m%*%m1 ## true matrix multiplication
+```
+
+```{r}
+x<- 1:4
+x[x %in% 1:2] <- 0
+x
+```
+
+### Random Wk 1 Helpful Functions
+```{r}
+args(list.files)
+seq(1, 10, by = .5)
+x<- seq(from= 4, to = 7, length.out = 12)
+x
+x[-c(2, 10)]
+y<- rep(c(5,6,7,8), times = 3)
+y
+rep(c(5,6,7,8), each = 3)
+paste(x, y, collapse = "-")
+```
+
+## Week 2 - Control Structures & Functions
+
+Control functions are useful for building functions - not necessarily for typing in the command line
+
+### Control Structures
+
+#### If/Else
+
+If: perform an action given a specified condition is true
+else: perform alternative action if condition is not true
+Command can contain multiple conditions
+Command does not require "else"
+
+```{r}
+x<- 3+0
+if(0<x & x>=3) {y<- "Low"}
+if(3<x & x<=7) {y<- "Medium"}
+if(7<x & x<=10) {y<- "High"}
+```
+
+#### For
+Loop index == i or j,k,l,etc
+
+```{r}
+for(i in 1:10) {
+  print(i)}
+x<- c("a", "b", "c")
+for(letter in x) {
+  print(letter)
+} ## can omit curly braces if single expression in body
+
+## Be careful w/ nested for loops for matrices (more than 2-3 levels can appear quite confusing)
+```
+
+### While
+
+can be useful and simple commands
+**beware** of infinite looping - need to make sure convergence occurs at some point!
+generally safer to use for command because it comes with a hard limit of runs!
+
+```{r}
+count<- 0
+while(count <10) {
+  print(count)
+  count<- count + 1
+  }
+```
+
+### Repeat, Next, & Retutn
+
+#### Repeat:
+initiates infinite loop : only way to end a repeat function is with "break"
+relatively limited statistical application
+generally used to optimization problems
+
+#### Next:
+Skips output for given condition : in this case - skips 1-5
+```{r}
+for (i in 1:10) {
+  if(i <= 5) {
+    next
+    }
+  print(i)
+}
+```
+
+#### Return
+signals that a function should exit & return given value
+```{r}
+for (i in 1:10) {
+  if(i == 5) {
+    return("5")
+  }
+  print(i)
+}
+```
+
+### Coding Standards
+
+- always save code to a text file  
+- ident (limit code width to 80 columns)
+  - rstudio/preferences/code/ tab width :: command A(select all)/ command I (applies indent)
+  - 8 space indents
+- limit length of functions 
+  - be intentional about what you assign to what function 
+  - helpful for finding errors 
+
+### Dates & Times
+
+Dates are represented by "Date" class (days since 1/1/1970)
+
+```{r}
+x<- as.Date("1970-01-01")
+x
+x+1
+unclass(x)
+unclass(as.Date("1971-01-01"))
+```
+
+Times are rep by POSIXct or POSIXlt class (seconds since 1/1/1970)
+- ct: very large integer (helpful when wanting to store times in df)
+- lt: list which also stores relevant date info
+
+Relevant generic funcs for DATE & TIME : weekdays, months, quarters
+
+```{r}
+x<- Sys.time()
+x
+p<- as.POSIXlt(x)
+names(unclass(p))
+p$sec
+y<- Sys.time() ## automatically in POSIXct
+unclass(y) ## produces integer accordingly
+```
+
+strptime() is a great function for creating data frames with time/ date info! just check help page for use its very simple.
+can do mathematical operations with vectors but they need to be of the same class!
+even keeps track of leap years, daylight savings, time zone (tz = ), etc.
+
+## Week 3 Loop Functions & Debugging
+
+###Loop functions
+- lapply: loops over list and applies function to each elem  
+- sapply: same as ^ but simplified output - if elems have length 1 -> vector; if all same length -> matrix
+- apply: function to margins of an array (helpful for data w/ dimensions)
+- tapply: function to subsets of a vector (table apply) 
+- mapply: multivariate version of lapply 
+- split: also helpful esp. w/ lapply 
+
+```{r}
+l<- list(a = 1:3, b = rnorm(10))
+lapply(l, mean) ## (vector aka list, function)
+lapply(l, runif) ## runif -> random number generator for uniform distrib given designated number of values
+lapply(l, runif, min = 0, max = 10) ## runif expanded from 0-1 to 0-10
+
+ml<- list(a = matrix(1:6, nrow = 2, ncol = 3), b = matrix(1:8, nrow = 2, ncol = 4))
+lapply(ml, function(anonymous) anonymous[1,]) ## created an anon function -> extracts first row of each
+```
+ Apply
+ 
+```{r}
+y<- matrix(rnorm(100), nrow = 5, ncol = 20)
+apply(y, 2, mean) ## Provides mean of each column ; collapses 1st dimension and KEEPS the SECOND!!
+apply(y, 1, mean) ## Provides mean of each row ; collapses 2nd dimension and KEEPS the FIRST!!
+apply(y, 1, quantile, probs = c(0.25, 0.75))
+a<- array(rnorm(2*2*10), c(2,2,10))
+apply(a, c(1,2), mean) ## collapses third dimension of array
+rowMeans(a, dims = 2)
+```
+
+shortcuts: (faster execution)
+rowMeans
+rowSums
+colMeans
+colSums
+
+Mapply
+applies function in parallel over argument set
+can easily vectorize a function which doesn't typically take vector arguments
+```{r}
+list(rep(1,4), rep(2, 3), rep(3, 2), rep(4, 1)) ## We can see which code is more efficient quite clearly
+mapply(rep, 1:4, 4:1)
+```
+
+Tapply
+
+used to apply functions to subsets of a vector
+
+tapply(x, index, function)
+x : vector
+index : factor --> subset
+
+```{r}
+x<- c(rnorm(10), runif(10), rnorm(10, 1))
+f<- gl(3, 10)
+t<- tapply(x, f, mean)
+t ## autosimplifies -> can specify false (simplify = FALSE) to produce a list
+tapply(x, f, range) ## list produced b/c cannot easily simplify
+
+```
+
+Split as a useful tool!
+```{r}
+split(x, f)
+lapply(split(x,f), mean)
+x<- rnorm(10)
+f1<- gl(2, 5)
+f2<- gl(5, 2)
+interaction(f1,f2) ## can create empty levels (these are all theoretical possibilities)
+str(split(x, list(f1, f2)))
+str(split(x, list(f1, f2), drop = TRUE)) ## drops empty levels
+```
+
+### Debugging!
+#### Conditions
+- message: lets you know something unexpected occurred  
+- warning: lets you know something when wrong but it is not fatal  
+- error: fatal problem occurred  
+**can create additional conditions!**
+
+**Debugging tools**
+- traceback : prints function call stack ; where in seq of function calls the error occurred
+- debug : give function as argument step through func line by line
+- browser : execution of specific function suspended rather than line by line
+- trace : allows insertion of debugging code into function (can insert into someone elses function)
+- recover : error handler function (stops execution of func immediately where error occurs)
+
+## Week 4
+### Str Function!
+compactly displays internal structure of an R object (lovely for data frames)
+- can be used in place of summary  
+- great for compactly displaying large lists (incl nested lists)  
+-  ~ 1 line per basic object  
+
+```{r}
+x<- rnorm(100, 2, 4)
+summary(x)
+str(x) ## gives number of values and first five values
+f<- gl(40,10)
+str(f) ## gives description and first several values
+summary(f)
+```
+ 
+### Simulation
+
+Generating Random numbers
+- _norm : ___ w/ normal distribution
+  - rnorm: generates variates w/ specified mean & SD
+  - dnorm:  evaluates norm prob density at a point / vector of points
+   - pnorm: eval cumulative distrib function for norm distrib
+   - qnorm: quantile function
+- rpois: random poisson variates w/ given rate
+
+```{r}
+set.seed(2) ## pick integer ; fixes same seq of "random" variables
+rnorm(6)
+rnorm(8)
+set.seed(2)
+rnorm(8) ## see that first six indicate same sequencing
+
+rpois(5, 10) ## 5 integers; "rate" =10 ~ similar to mean
+ppois(2, 3) ## prob x (aka 3)<=2 
+ppois(7, 3) ## prob 3 <= 7
+```
+
+Sampling
+
+set seed for reproducibility!!
+
+```{r}
+sample(1:10, 5) ## pick five random values from data 1:10
+sample(1:10, 10, replace = TRUE) ## picks values w/ replacement
+sample(letters, 3)
+
+```
+
+### R Profiling
+
+optimizing code to perform more quickly if very time consuming
+create b4 optimizing (otherwise you'll introduce bugs/ may run into issues)
+
+system.time() : produces the amount of time it takes (s) to execute function/ evaluate an expression
+  - for long expressions : check parts using curly braces 
+-> returns object of class proc_time
+  - user time (CPU charged time)
+  - elapsed time (time experienced relative to actual time)
+  
+  if elapsed > user : if CPU spends lots of time waiting around for external issues
+  if elapsed < user : program exploits additional cores
+  - parallel processing : via parallel pkg
+  
+  Challenge: expression assumes you know where the problem is
+  
+Rprof : begins profiler
+summaryRprof() : makes it readable
+
+DO NOT USE w/ system.time() : it will bum you out
+
+by.total(): spent in top level function (not where real work occurs)
+by.self(): spent in given function (after subtracting out lower level functions)
